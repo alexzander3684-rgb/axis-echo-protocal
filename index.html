@@ -2,50 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AXIS</title>
+  <title>AXIS — Echo Protocol</title>
+
+  <!-- PWA REQUIRED -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#02040a" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- STYLE -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- SERVICE WORKER -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/service-worker.js");
+      });
+    }
+  </script>
 </head>
+
 <body>
 
-<header class="top-bar">
-  <div class="logo">AXIS</div>
-  <div class="title">GLOBAL OPERATIONS INTERFACE — ONLINE</div>
-</header>
-
-<nav class="side-nav">
-  <a class="active">Operations</a>
-  <a href="library.html">Echo Archives</a>
-</nav>
-
-<main class="hud-grid">
-
-  <section class="panel">
-    <div class="panel-title">LOCAL SYSTEM TIME</div>
-    <div id="clock" class="big-text">--:--:--</div>
-  </section>
-
-  <section class="panel">
-    <div class="panel-title">ACTIVE ECHOES</div>
-    <div id="echoList" class="small-text"></div>
-  </section>
-
-  <section class="panel">
-    <div class="panel-title">OPERATOR ACTION</div>
-    <select id="echoSelect"></select>
-    <button onclick="doAction('OBSERVE')">OBSERVE</button>
-    <button onclick="doAction('CONTAIN')">CONTAIN</button>
-    <button onclick="doAction('ACCELERATE')">ACCELERATE</button>
-  </section>
-
-  <section class="panel spark-panel">
-    <div class="panel-title">SPARK // AXIS INTERFACE</div>
-    <div id="sparkStatus" class="spark-text">
-      ONLINE — Monitoring operator decisions…
+  <!-- TOP BAR -->
+  <header class="top-bar">
+    <div class="left">
+      <span class="axis-title">AXIS</span>
+      <span class="status online">ONLINE</span>
     </div>
-  </section>
 
-</main>
+    <div class="right">
+      <span id="clock">--:--:--</span>
+    </div>
+  </header>
 
-<script src="app.js"></script>
+  <!-- MAIN GRID -->
+  <main class="grid">
+
+    <section class="panel spark-panel">
+      <h3>SPARK</h3>
+      <div id="spark-status">Awaiting interaction…</div>
+      <button id="spark-init">Engage Spark</button>
+    </section>
+
+    <section class="panel echo-panel">
+      <h3>ACTIVE ECHO</h3>
+      <div id="echo-status">No echo loaded.</div>
+      <button onclick="location.href='library.html'">Echo Archives</button>
+    </section>
+
+    <section class="panel metrics-panel">
+      <h3>SYSTEM METRICS</h3>
+      <div>Integrity</div>
+      <div class="bar"></div>
+      <div>Stability</div>
+      <div class="bar"></div>
+      <div>Drift</div>
+      <div class="bar"></div>
+    </section>
+
+    <section class="panel scan-panel">
+      <h3>SCAN ARRAY</h3>
+      <canvas id="radar" width="200" height="200"></canvas>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>AXIS Echo Protocol v1 — Spark Global</span>
+  </footer>
+
+  <!-- APP LOGIC -->
+  <script src="app.js"></script>
+
+  <!-- CLOCK -->
+  <script>
+    function updateClock() {
+      const now = new Date();
+      document.getElementById("clock").textContent =
+        now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+
 </body>
 </html>
